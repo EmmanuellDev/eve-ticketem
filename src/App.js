@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import Dashboard from "./Dashboard";
 import Profile from "./Profile";
 import { ethers } from "ethers";
+import Organize from "./Organize";
 
 const ConnectWallet = () => {
   const [walletAddress, setWalletAddress] = useState("");
@@ -47,6 +48,7 @@ function App() {
         <Route path="/" element={<ConnectWallet />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/organize" element={<Organize />} />
       </Routes>
     </Router>
   );
