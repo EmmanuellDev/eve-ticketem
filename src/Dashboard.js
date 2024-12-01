@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { ChromePicker } from "react-color"; 
 import { FaLock, FaGlobe, FaEnvelope, FaTwitter, FaLinkedin, FaDiscord, FaTelegramPlane, FaInstagram } from "react-icons/fa";
+import { database, ref, set } from "./firebase";
 
 const Dashboard = () => {
   const [walletAddress, setWalletAddress] = useState("");
@@ -33,6 +34,221 @@ const Dashboard = () => {
   const [additionalPrizes, setAdditionalPrizes] = useState([]);
   const [speakers, setSpeakers] = useState([]);
   const [judges, setJudges] = useState([]);
+
+  const contractABI = 
+      [
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "website",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "email",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "twitter",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "linkedin",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "discord",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "telegram",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "instagram",
+              "type": "string"
+            }
+          ],
+          "name": "storeLinks",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "getLinks",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "website",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "email",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "twitter",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "linkedin",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "discord",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "telegram",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "instagram",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct HackathonLinks.Links",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "userLinks",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "website",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "email",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "twitter",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "linkedin",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "discord",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "telegram",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "instagram",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ];
+
+  const contractAddress = "0x593a59e3518C017b8340ebB6f23174bE998B07d6";
+
+  const [formData, setFormData] = useState({
+    website: "",
+    email: "",
+    twitter: "",
+    linkedin: "",
+    discord: "",
+    telegram: "",
+    instagram: "",
+  });
+
+  const handleSocialMediaChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSocialMediaSubmit = async (e) => {
+    e.preventDefault();
+
+    // Check if the user has a Web3 wallet (e.g., MetaMask)
+    if (window.ethereum) {
+      const provider = new ethers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+      try {
+        // Send a transaction to store the links on-chain
+        const tx = await contract.storeLinks(
+          formData.website,
+          formData.email,
+          formData.twitter,
+          formData.linkedin,
+          formData.discord,
+          formData.telegram,
+          formData.instagram
+        );
+
+        // Wait for the transaction to be mined
+        await tx.wait();
+
+        alert("Links submitted successfully!");
+
+        // Clear the form after submission
+        setFormData({
+          website: "",
+          email: "",
+          twitter: "",
+          linkedin: "",
+          discord: "",
+          telegram: "",
+          instagram: "",
+        });
+      } catch (error) {
+        console.error("Error submitting links:", error);
+        alert("Failed to submit links.");
+      }
+    } else {
+      alert("Please install MetaMask or another Web3 wallet.");
+    }
+  };
+
 
   const handleColorChange = (newColor) => {
     setColor(newColor.hex); // Update the color with the hex value
@@ -206,7 +422,7 @@ const Dashboard = () => {
     switch (activeSubSection) {
       case "Hack Info":
         return (
-          <div>
+          <div key="1">
             <label className="block mb-2 font-medium text-gray-700">Hackathon Name</label>
             <input
               type="text"
@@ -257,22 +473,29 @@ const Dashboard = () => {
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="Enter the team size (e.g., 1-5)"
             />
-      
+            <div className="gap-4">
             <button className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400">
-              Submit
+              Previous Page
             </button>
+            <button className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400">
+              Next Page
+            </button>
+            </div>
           </div>
         );
       case "Application":
-        return <p>Details regarding the application process.</p>;
+        return <p key='2'>Details regarding the application process.</p>;
       case "Social Links":
         return (
-          <div>
+          <form onSubmit={handleSocialMediaSubmit}>
             <label className="block mb-2 font-medium text-gray-700 flex items-center">
               <FaGlobe className="mr-2" /> Hack Website Link
             </label>
             <input
               type="url"
+              name="website"
+              value={formData.website}
+              onChange={handleSocialMediaChange}
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="https://www.yourhackathonwebsite.com"
             />
@@ -282,6 +505,9 @@ const Dashboard = () => {
             </label>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleSocialMediaChange}
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="hackathon@example.com"
             />
@@ -291,6 +517,9 @@ const Dashboard = () => {
             </label>
             <input
               type="url"
+              name="twitter"
+              value={formData.twitter}
+              onChange={handleSocialMediaChange}
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="https://twitter.com/yourhackathon"
             />
@@ -300,6 +529,9 @@ const Dashboard = () => {
             </label>
             <input
               type="url"
+              name="linkedin"
+              value={formData.linkedin}
+              onChange={handleSocialMediaChange}
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="https://linkedin.com/in/yourhackathon"
             />
@@ -309,6 +541,9 @@ const Dashboard = () => {
             </label>
             <input
               type="url"
+              name="discord"
+              value={formData.discord}
+              onChange={handleSocialMediaChange}      
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="https://discord.gg/yourhackathon"
             />
@@ -318,6 +553,9 @@ const Dashboard = () => {
             </label>
             <input
               type="url"
+              name="telegram"
+              value={formData.telegram}
+              onChange={handleSocialMediaChange}
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="https://t.me/yourhackathon"
             />
@@ -327,14 +565,17 @@ const Dashboard = () => {
             </label>
             <input
               type="url"
+              name="instagram"
+              value={formData.instagram}
+              onChange={handleSocialMediaChange}
               className="w-full mb-4 p-2 border border-gray-300 rounded"
               placeholder="https://instagram.com/yourhackathon"
             />
       
-            <button className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400">
+            <button type="submit" className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400">
               Submit Links
             </button>
-          </div>
+          </form>
         );
       case "Brand":
         return (
