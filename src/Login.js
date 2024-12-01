@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase"; // Import Firebase auth from firebase.js
+import { FaLock } from "react-icons/fa";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -14,12 +15,39 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isSignup, setIsSignup] = useState(true); // Toggle between Signup and Login
   const [error, setError] = useState(null);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+
+  useEffect(() => {
+    checkWalletConnection();
+  }, []);
+
+  // Function to check wallet connection
+  const checkWalletConnection = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        if (accounts.length > 0) {
+          setIsWalletConnected(true); // Wallet is connected
+        } else {
+          setIsWalletConnected(false); // No wallet connected
+        }
+      } catch (error) {
+        console.error("Error checking wallet connection:", error);
+        setIsWalletConnected(false);
+      }
+    } else {
+      setIsWalletConnected(false); // Metamask not installed
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +94,20 @@ const Login = () => {
       toast.error(error.message);
     }
   };
+
+  if (!isWalletConnected) {
+    // Unauthorized access message
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+        <FaLock className="text-6xl text-red-500 mb-4" />
+        <h2 className="text-3xl font-bold mb-2">Unauthorized Access</h2>
+        <p className="text-lg mb-6">
+          Please connect your wallet to access this page.
+        </p>
+      </div>
+    );
+  }
+
 
   return (
     <div
@@ -190,7 +232,7 @@ const Login = () => {
                 >
                   Sign In
                 </button>
-                <h2 className="flex justify-center pt-4">( Or )</h2>
+                <h6 className="flex justify-center pt-4">( Or )</h6>
                 <div className="mt-1 text-center">
                   <button
                     type="button"

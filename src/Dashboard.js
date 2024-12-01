@@ -41,9 +41,6 @@ const Dashboard = () => {
     useState(null);
   const [sponsorName, setSponsorName] = useState("");
   const [sponsorLogo, setSponsorLogo] = useState(null);
-  const [firstPrize, setFirstPrize] = useState("");
-  const [secondPrize, setSecondPrize] = useState("");
-  const [thirdPrize, setThirdPrize] = useState("");
   const [additionalPrizes, setAdditionalPrizes] = useState([]);
 
   const handleColorChange = (newColor) => {
@@ -151,16 +148,6 @@ const Dashboard = () => {
     if (file) {
       setSponsorLogo(URL.createObjectURL(file)); // Create a URL for the uploaded image
     }
-  };
-
-  const handleAddPrize = () => {
-    setAdditionalPrizes([...additionalPrizes, ""]); // Add an empty string for a new prize field
-  };
-
-  const handlePrizeChange = (index, value) => {
-    const updatedPrizes = [...additionalPrizes];
-    updatedPrizes[index] = value;
-    setAdditionalPrizes(updatedPrizes);
   };
 
   useEffect(() => {
@@ -332,56 +319,6 @@ const Dashboard = () => {
         </div>
 
         <div>
-            <div>
-              {/* Color Input Field */}
-              <div className="mb-4">
-                <label className="block mb-2 font-medium text-gray-700">
-                  Choose the colour from the colour palette
-                </label>
-                <input
-                  type="text"
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)} // Allow user to input hex color manually
-                  placeholder="#000fff"
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-
-              {/* Button to Open Color Palette */}
-              <button
-                onClick={toggleColorPalette}
-                className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400"
-              >
-                Open Color Palette
-              </button>
-
-              {/* Color Palette (Visible when button is clicked) */}
-              {showColorPalette && (
-                <div className="mt-4 relative">
-                  {/* Color Picker */}
-                  <ChromePicker
-                    color={color} // Set the initial color of the palette
-                    onChange={handleColorChange} // Update color when the user picks a new color
-                  />
-                  {/* "Done" Button to Close the Palette */}
-                  <button
-                    onClick={handleDoneClick}
-                    className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400"
-                  >
-                    Done
-                  </button>
-                </div>
-              )}
-            </div>
-            {selectedColors.length > 0 && (
-              <p className="mt-4">
-                Selected Colors:
-                <span className="ml-2 text-teal-600">
-                  {selectedColors.join(", ")}
-                </span>
-              </p>
-            )}
-
             {/* Hack Logo Upload */}
             <label className="block mb-2 font-medium text-gray-700 mt-6">
               Hack Logo
@@ -399,27 +336,6 @@ const Dashboard = () => {
                   src={logoPreview}
                   alt="Logo Preview"
                   className="w-32 h-32 object-contain mt-2"
-                />
-              </div>
-            )}
-
-            {/* Hack Favicon Upload */}
-            <label className="block mb-2 font-medium text-gray-700">
-              Hack Favicon
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              className="w-full mb-4 p-2 border border-gray-300 rounded"
-              onChange={(e) => handleFileChange(e, setFaviconPreview)}
-            />
-            {faviconPreview && (
-              <div className="mb-4">
-                <p className="text-gray-700 font-medium">Favicon Preview:</p>
-                <img
-                  src={faviconPreview}
-                  alt="Favicon Preview"
-                  className="w-16 h-16 object-contain mt-2"
                 />
               </div>
             )}
@@ -566,9 +482,6 @@ const Dashboard = () => {
             </div>
         </div>
 
-        <div className="p-4 border border-gray-300 rounded">
-            <h2 className="text-2xl font-bold mb-4">Prize Pool</h2>
-        </div>
       </div>
     );
   };
