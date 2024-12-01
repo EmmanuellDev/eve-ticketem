@@ -2,7 +2,7 @@ import Web3 from "web3";
 import abi from "./abi/ABI.json";
 
 // Replace with your deployed contract address
-const CONTRACT_ADDRESS = "0x24e010B9876c1e2D76fD7921B1CE6F92E17c5337";
+const CONTRACT_ADDRESS = "0x813415e5C40d7F4BDa449E1da80C900156449b70";
 
 // Initialize Web3 provider
 export const initializeWeb3 = async () => {
