@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [selectedMainOption, setSelectedMainOption] = useState("");
   const [selectedSubOption, setSelectedSubOption] = useState("");
   const [activeSubSection, setActiveSubSection] = useState("Hack Info");
-  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedColors] = useState([]);
   const [logoPreview, setLogoPreview] = useState(null);
   const [faviconPreview, setFaviconPreview] = useState(null);
   const [color, setColor] = useState("#000fff");
@@ -45,8 +45,6 @@ const Dashboard = () => {
   const [secondPrize, setSecondPrize] = useState("");
   const [thirdPrize, setThirdPrize] = useState("");
   const [additionalPrizes, setAdditionalPrizes] = useState([]);
-  const [speakers, setSpeakers] = useState([]);
-  const [judges, setJudges] = useState([]);
 
   const handleColorChange = (newColor) => {
     setColor(newColor.hex); // Update the color with the hex value
@@ -133,7 +131,7 @@ const Dashboard = () => {
     }, 1000);
 
     return () => clearInterval(countdownTimer);
-  }, [
+  },[
     applicationEndsCountdown,
     hackathonBeginsCountdown,
     projectSubmissionCountdown,
@@ -163,36 +161,6 @@ const Dashboard = () => {
     const updatedPrizes = [...additionalPrizes];
     updatedPrizes[index] = value;
     setAdditionalPrizes(updatedPrizes);
-  };
-
-  const handleAddSpeaker = () => {
-    setSpeakers([...speakers, { name: "", picture: "", profession: "" }]);
-  };
-
-  const handleSpeakerChange = (index, field, value) => {
-    const updatedSpeakers = [...speakers];
-    updatedSpeakers[index][field] = value;
-    setSpeakers(updatedSpeakers);
-  };
-
-  const handleRemoveSpeaker = (index) => {
-    const updatedSpeakers = speakers.filter((_, i) => i !== index);
-    setSpeakers(updatedSpeakers);
-  };
-
-  const handleAddJudge = () => {
-    setJudges([...judges, { name: "", picture: "", profession: "" }]);
-  };
-
-  const handleJudgeChange = (index, field, value) => {
-    const updatedJudges = [...judges];
-    updatedJudges[index][field] = value;
-    setJudges(updatedJudges);
-  };
-
-  const handleRemoveJudge = (index) => {
-    const updatedJudges = judges.filter((_, i) => i !== index);
-    setJudges(updatedJudges);
   };
 
   useEffect(() => {
