@@ -10,7 +10,7 @@ const Organize = () => {
     const checkWalletConnection = async () => {
       try {
         if (window.ethereum) {
-          const provider = new ethers.BrowserProvider(window.ethereum);
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
           const accounts = await provider.send("eth_requestAccounts", []);
           if (accounts.length > 0) {
             setWalletAddress(accounts[0]);

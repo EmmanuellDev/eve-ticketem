@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BrowserProvider } from "ethers";
+import { providers } from "ethers"; // Correct import for Web3Provider
 import { Rocket, Code, Users, Trophy, Wallet } from "lucide-react";
 
 const DevMaHomePage = () => {
@@ -10,14 +10,14 @@ const DevMaHomePage = () => {
   const connectWallet = async () => {
     try {
       if (window.ethereum) {
-        const provider = new BrowserProvider(window.ethereum);
+        const provider = new providers.Web3Provider(window.ethereum); // Corrected
         const accounts = await provider.send("eth_requestAccounts", []);
         const address = accounts[0];
         setWalletAddress(address);
         console.log("Connected wallet address:", address);
 
-        // Redirect to the login page after successful connection
-        navigate("/login");
+        // Redirect to the dashboard after successful connection
+        navigate("/dashboard");
       } else {
         alert("Please install a compatible wallet like MetaMask.");
       }
@@ -30,7 +30,7 @@ const DevMaHomePage = () => {
     const checkWalletConnection = async () => {
       try {
         if (window.ethereum) {
-          const provider = new BrowserProvider(window.ethereum);
+          const provider = new providers.Web3Provider(window.ethereum); // Corrected
           const accounts = await provider.listAccounts();
           if (accounts.length > 0) {
             setWalletAddress(accounts[0]);
@@ -50,8 +50,6 @@ const DevMaHomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col justify-center items-center">
-      <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center"></div>
-
       <div className="relative z-10 text-center p-8 max-w-4xl">
         <h1 className="text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-600 animate-pulse">
           Welcome to DevMa
@@ -99,8 +97,6 @@ const DevMaHomePage = () => {
             </div>
           )}
         </div>
-
-        <div className="absolute -bottom-20 left-0 right-0 h-20 bg-gradient-to-t from-gray-900 to-transparent pointer-events-none"></div>
       </div>
     </div>
   );

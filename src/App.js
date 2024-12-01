@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import Organize from "./Organize";
 import DevMaHomePage from "./HomePage"
 import Login from "./Login";
+import Test from "./Test";
 
 
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/organize" element={<Organize />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </Router>
   );

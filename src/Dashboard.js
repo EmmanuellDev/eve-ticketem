@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import { ChromePicker } from "react-color";
+import { providers } from 'ethers';
 import {
   FaLock,
   FaGlobe,
@@ -19,11 +18,7 @@ const Dashboard = () => {
   const [selectedMainOption, setSelectedMainOption] = useState("");
   const [selectedSubOption, setSelectedSubOption] = useState("");
   const [activeSubSection, setActiveSubSection] = useState("Hack Info");
-  const [selectedColors] = useState([]);
   const [logoPreview, setLogoPreview] = useState(null);
-  const [faviconPreview, setFaviconPreview] = useState(null);
-  const [color, setColor] = useState("#000fff");
-  const [showColorPalette, setShowColorPalette] = useState(false);
   const [timezone, setTimezone] = useState("UTC");
   const [applicationOpens, setApplicationOpens] = useState("");
   const [applicationEnds, setApplicationEnds] = useState("");
@@ -41,19 +36,6 @@ const Dashboard = () => {
     useState(null);
   const [sponsorName, setSponsorName] = useState("");
   const [sponsorLogo, setSponsorLogo] = useState(null);
-  const [additionalPrizes, setAdditionalPrizes] = useState([]);
-
-  const handleColorChange = (newColor) => {
-    setColor(newColor.hex); // Update the color with the hex value
-  };
-
-  const toggleColorPalette = () => {
-    setShowColorPalette(!showColorPalette);
-  };
-
-  const handleDoneClick = () => {
-    setShowColorPalette(false); // Close the color palette
-  };
 
   const handleFileChange = (event, setPreview) => {
     const file = event.target.files[0];
@@ -154,16 +136,19 @@ const Dashboard = () => {
     const checkWalletConnection = async () => {
       try {
         if (window.ethereum) {
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          const accounts = await provider.send("eth_requestAccounts", []); // Request wallet connection
-          if (accounts.length > 0) {
-            setWalletAddress(accounts[0]);
+          // Use Web3Provider instead of BrowserProvider
+          const provider = new providers.Web3Provider(window.ethereum);
+          await window.ethereum.request({ method: 'eth_requestAccounts' }); // Request wallet connection
+          const signer = provider.getSigner();
+          const accounts = await signer.getAddress();
+          if (accounts) {
+            setWalletAddress(accounts); // Set the wallet address
             setIsAuthorized(true); // Allow access if wallet is connected
           } else {
             setIsAuthorized(false);
           }
         } else {
-          setIsAuthorized(false);
+          setIsAuthorized(false); // No Ethereum provider found
         }
       } catch (error) {
         console.error("Error connecting to wallet:", error);
