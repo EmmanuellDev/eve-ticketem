@@ -143,7 +143,7 @@ const Dashboard = () => {
     const hours = Math.floor(timeRemaining / 1000 / 60 / 60);
     const minutes = Math.floor((timeRemaining / 1000 / 60) % 60);
     const seconds = Math.floor((timeRemaining / 1000) % 60);
-    return ${hours}h ${minutes}m ${seconds}s;
+    return `${hours}h ${minutes}m ${seconds}s`;
   };
 
   const handleLogoChange = (e) => {
