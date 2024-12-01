@@ -7,7 +7,13 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+<<<<<<< HEAD
     "ethers": "^5.7.0",
+=======
+    "@tsparticles/all": "^3.7.1",
+    "@tsparticles/react": "^3.0.0",
+    "ethers": "^6.13.4",
+>>>>>>> e95b6b25d8d8fb87a273824c579b10bf0f41cf41
     "firebase": "^11.0.2",
     "lucide-react": "^0.462.0",
     "react": "^18.3.1",
