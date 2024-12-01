@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import Dashboard from "./Dashboard";
 import Organize from "./Organize";
 import DevMaHomePage from "./HomePage"
+import Login from "./Login";
 
 
 
@@ -11,6 +12,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<DevMaHomePage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/organize" element={<Organize />} />
       </Routes>
