@@ -248,9 +248,6 @@ const Dashboard = () => {
             <option>Open Innovation (No restrictions)</option>
           </select>
 
-          <label className="block mb-2 font-medium text-gray-700">
-            Approx. Participants
-          </label>
           <input
             type="number"
             className="w-full mb-4 p-2 border border-gray-300 rounded"
@@ -266,9 +263,6 @@ const Dashboard = () => {
             placeholder="Enter the team size (e.g., 1-5)"
           />
 
-          <button className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400">
-            Submit
-          </button>
         </div>
 
         <div>
@@ -335,9 +329,6 @@ const Dashboard = () => {
               placeholder="https://instagram.com/yourhackathon"
             />
 
-            <button className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400">
-              Submit Links
-            </button>
         </div>
 
         <div>
@@ -433,9 +424,6 @@ const Dashboard = () => {
               </div>
             )}
 
-            <button className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-400">
-              Submit Brand
-            </button>
         </div>
 
         <div>
@@ -579,86 +567,7 @@ const Dashboard = () => {
         </div>
 
         <div className="p-4 border border-gray-300 rounded">
-            <h2 className="text-2xl font-bold mb-4">Prize Details</h2>
-
-            {/* First Prize */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">
-                First Prize
-              </label>
-              <input
-                type="text"
-                placeholder="Enter First Prize Details"
-                value={firstPrize}
-                onChange={(e) => setFirstPrize(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-
-            {/* Second Prize */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">
-                Second Prize
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Second Prize Details"
-                value={secondPrize}
-                onChange={(e) => setSecondPrize(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-
-            {/* Third Prize */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">
-                Third Prize
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Third Prize Details"
-                value={thirdPrize}
-                onChange={(e) => setThirdPrize(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-
-            {/* Additional Prize Bounties */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">
-                Additional Prize Bounties
-              </label>
-              {additionalPrizes.map((prize, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <input
-                    type="text"
-                    placeholder="Enter Additional Prize Details"
-                    value={prize}
-                    onChange={(e) => handlePrizeChange(index, e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updatedPrizes = additionalPrizes.filter(
-                        (_, i) => i !== index
-                      );
-                      setAdditionalPrizes(updatedPrizes);
-                    }}
-                    className="ml-2 text-red-500 hover:text-red-700"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={handleAddPrize}
-                className="bg-teal-500 text-white font-bold px-4 py-2 rounded hover:bg-teal-400"
-              >
-                Add Prize
-              </button>
-            </div>
+            <h2 className="text-2xl font-bold mb-4">Prize Pool</h2>
         </div>
       </div>
     );

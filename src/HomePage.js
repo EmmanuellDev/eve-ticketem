@@ -13,10 +13,11 @@ const DevMaHomePage = () => {
         const provider = new BrowserProvider(window.ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
         const address = accounts[0];
-        setWalletAddress(address); // Ensure this is a string
+        setWalletAddress(address);
         console.log("Connected wallet address:", address);
 
-        navigate("/dashboard");
+        // Redirect to the login page after successful connection
+        navigate("/login");
       } else {
         alert("Please install a compatible wallet like MetaMask.");
       }
@@ -32,7 +33,7 @@ const DevMaHomePage = () => {
           const provider = new BrowserProvider(window.ethereum);
           const accounts = await provider.listAccounts();
           if (accounts.length > 0) {
-            setWalletAddress(accounts[0]); // Ensure this is a string
+            setWalletAddress(accounts[0]);
             console.log("Wallet already connected:", accounts[0]);
           }
         }

@@ -132,7 +132,8 @@ const Login = () => {
                 >
                   Create Account
                 </button>
-                <div className="mt-4 text-center">
+                <h2 className="flex justify-center pt-4">( Or )</h2>
+                <div className="mt-1 text-center">
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}
@@ -189,7 +190,8 @@ const Login = () => {
                 >
                   Sign In
                 </button>
-                <div className="mt-4 text-center">
+                <h2 className="flex justify-center pt-4">( Or )</h2>
+                <div className="mt-1 text-center">
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}
