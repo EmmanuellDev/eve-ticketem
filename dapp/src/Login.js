@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase"; // Import Firebase auth from firebase.js
+import { FaLock } from "react-icons/fa";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -14,11 +15,38 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isSignup, setIsSignup] = useState(true); // Toggle between Signup and Login
   const [error, setError] = useState(null);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+
+  useEffect(() => {
+    checkWalletConnection();
+  }, []);
+
+  // Function to check wallet connection
+  const checkWalletConnection = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        if (accounts.length > 0) {
+          setIsWalletConnected(true); // Wallet is connected
+        } else {
+          setIsWalletConnected(false); // No wallet connected
+        }
+      } catch (error) {
+        console.error("Error checking wallet connection:", error);
+        setIsWalletConnected(false);
+      }
+    } else {
+      setIsWalletConnected(false); // Metamask not installed
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -67,6 +95,20 @@ const Login = () => {
     }
   };
 
+  if (!isWalletConnected) {
+    // Unauthorized access message
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+        <FaLock className="text-6xl text-red-500 mb-4" />
+        <h2 className="text-3xl font-bold mb-2">Unauthorized Access</h2>
+        <p className="text-lg mb-6">
+          Please connect your wallet to access this page.
+        </p>
+      </div>
+    );
+  }
+
+
   return (
     <div
       className={`flex min-h-screen justify-center items-center transition-all duration-700 ${
@@ -87,13 +129,16 @@ const Login = () => {
                 Welcome to DevMa
               </h2>
               <p className="mb-4 text-lg text-white">
-                Join us to manage your medical needs online.
+                Get more hacks & events
               </p>
               <button
                 onClick={() => setIsSignup(false)}
-                className="bg-transparent text-white px-6 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all duration-300"
+                className="relative group overflow-hidden bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 rounded-full text-lg font-bold hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 active:scale-95"
               >
-                Sign In
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 opacity-0 group-hover:opacity-100 transition duration-700 blur-md"></div>
+                <span className="relative z-10 flex items-center justify-center gap-3">
+                  Sign In
+                </span>
               </button>
             </div>
             <div className="w-1/2 p-10 bg-black text-white">
@@ -132,7 +177,8 @@ const Login = () => {
                 >
                   Create Account
                 </button>
-                <div className="mt-4 text-center">
+                <h2 className="flex justify-center pt-4">( Or )</h2>
+                <div className="mt-1 text-center">
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}
@@ -189,30 +235,35 @@ const Login = () => {
                 >
                   Sign In
                 </button>
-                <div className="mt-4 text-center">
+                <h6 className="flex justify-center pt-4">( Or )</h6>
+                <div className="mt-1 text-center">
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}
                     className="w-full bg-blue-600 text-white px-6 py-3 mt-4 rounded-lg hover:bg-blue-700 transition-all duration-300"
                   >
+                    
                     Sign In with Google
                   </button>
+                  
                 </div>
               </form>
             </div>
-            <div className="w-1/2 bg-[#010305] flex flex-col justify-center items-center p-8 text-white">
+            <div className="w-1/2 bg-[#000000] flex flex-col justify-center items-center p-8 text-white">
               <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-600 animate-pulse mb-6">
                 Welcome Back!
               </h2>
-              <p className="mb-4 text-lg text-white">
-                Sign in to access your account and continue managing your
-                health.
+              <p className="mb-4 text-lg text-white flex text-center">
+                Want to dive into the world of excitement? Then Make an Account Now!
               </p>
               <button
                 onClick={() => setIsSignup(true)}
-                className="bg-transparent text-white px-6 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all duration-300"
+                className="relative group overflow-hidden bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 rounded-full text-lg font-bold hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 active:scale-95"
               >
-                Create Account
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 opacity-0 group-hover:opacity-100 transition duration-700 blur-md"></div>
+                <span className="relative z-10 flex items-center justify-center gap-3">
+                  Create Account
+                </span>
               </button>
             </div>
           </div>
