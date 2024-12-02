@@ -1,109 +1,101 @@
 import React, { useState, useEffect } from "react";
-import { getHackathonData } from "./integration"; // Import the function to get stored data
+import { getAllHackathons, applyForHackathon } from "./integration"; // Adjust the path as needed
 
 const Dashboard = () => {
-  const [hackathonData, setHackathonData] = useState(null);
+  // States for hackathon data, application status, and errors
+  const [hackathons, setHackathons] = useState([]);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState("");
+  const [hackathonId, setHackathonId] = useState(""); // ID for applying to a hackathon
 
+  // Fetch all hackathons on component mount
   useEffect(() => {
-    const fetchHackathonData = async () => {
+    const fetchHackathons = async () => {
       try {
-        const data = await getHackathonData();
-        setHackathonData(data);
+        const data = await getAllHackathons(); // Using integration.js function to get all hackathons
+        setHackathons(data);
       } catch (error) {
-        console.error("Error fetching hackathon data:", error);
-        alert("Failed to fetch hackathon data.");
+        console.error("Error fetching hackathons:", error);
+        setError("Error fetching hackathons.");
       }
     };
 
-    fetchHackathonData();
+    fetchHackathons();
   }, []);
 
-  if (!hackathonData) {
-    return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Hackathon Dashboard</h1>
-        <p>Loading your hackathon data...</p>
-      </div>
-    );
-  }
+  // Handle applying for a hackathon
+  const handleApplyForHackathon = async () => {
+    try {
+      await applyForHackathon(hackathonId); // Using integration.js function to apply for a hackathon
+      setMessage(`Successfully applied for hackathon ID: ${hackathonId}`);
+    } catch (error) {
+      setError(error.message || "Error applying for hackathon.");
+      console.error(error);
+    }
+  };
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    setHackathonId(e.target.value);
+  };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Hackathon Dashboard</h1>
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold">Hackathon Information</h2>
-        <p>
-          <strong>Name:</strong> {hackathonData.hackathonName}
-        </p>
-        <p>
-          <strong>Tagline:</strong> {hackathonData.tagline}
-        </p>
-        <p>
-          <strong>Description:</strong> {hackathonData.description}
-        </p>
-        <p>
-          <strong>Website:</strong>{" "}
-          <a
-            href={hackathonData.website}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {hackathonData.website}
-          </a>
-        </p>
-        <p>
-          <strong>Email:</strong> {hackathonData.email}
-        </p>
-        <p>
-          <strong>Twitter:</strong>{" "}
-          <a
-            href={hackathonData.twitter}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {hackathonData.twitter}
-          </a>
-        </p>
-        <p>
-          <strong>LinkedIn:</strong>{" "}
-          <a
-            href={hackathonData.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {hackathonData.linkedin}
-          </a>
-        </p>
-        <p>
-          <strong>Discord:</strong>{" "}
-          <a
-            href={hackathonData.discord}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {hackathonData.discord}
-          </a>
-        </p>
-        <p>
-          <strong>Telegram:</strong>{" "}
-          <a
-            href={hackathonData.telegram}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {hackathonData.telegram}
-          </a>
-        </p>
-        <p>
-          <strong>Instagram:</strong>{" "}
-          <a
-            href={hackathonData.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {hackathonData.instagram}
-          </a>
-        </p>
+
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {message && <div className="text-green-500 mb-4">{message}</div>}
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-4">All Hackathons</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {hackathons.length > 0 ? (
+            hackathons.map((hackathon) => (
+              <div key={hackathon.id} className="border p-4 rounded shadow-lg">
+                <h3 className="text-lg font-semibold">{hackathon.name}</h3>
+                <p>
+                  <strong>Tagline:</strong> {hackathon.tagline}
+                </p>
+                <p>
+                  <strong>Description:</strong> {hackathon.description}
+                </p>
+                <p>
+                  <strong>Website:</strong>{" "}
+                  <a
+                    href={hackathon.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500"
+                  >
+                    {hackathon.website}
+                  </a>
+                </p>
+                <p>
+                  <strong>Email:</strong> {hackathon.email}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No hackathons available.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold">Apply for a Hackathon</h2>
+        <input
+          type="text"
+          placeholder="Enter Hackathon ID"
+          className="border p-2 w-full mb-2"
+          value={hackathonId}
+          onChange={handleInputChange}
+        />
+        <button
+          className="bg-green-500 text-white p-2 mt-2"
+          onClick={handleApplyForHackathon}
+        >
+          Apply for Hackathon
+        </button>
       </div>
     </div>
   );
