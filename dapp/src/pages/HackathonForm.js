@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { storeHackathonData } from "./integration"; // Import the function to store data
+import { storeHackathonData } from "../integration"; // Import the function to store data
 
 const HackathonForm = () => {
   const [formData, setFormData] = useState({

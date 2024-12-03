@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllHackathons, applyForHackathon } from "./integration"; // Adjust the path as needed
+import { getAllHackathons, applyForHackathon } from "../integration"; // Adjust the path as needed
 
 const Dashboard = () => {
   const [hackathons, setHackathons] = useState([]);
